@@ -1,6 +1,10 @@
 #pragma once
 
+#include <queue>
+
 #include <QMainWindow>
+#include <QTimer>
+#include <QtSerialPort/QtSerialPort>
 #include "ui_ISIM.h"
 
 class MainWindow : public QMainWindow {
@@ -13,6 +17,4 @@ class MainWindow : public QMainWindow {
 
 	private:
 		Ui::MainWindow ui;
-
-	protected:
 };
