@@ -3,13 +3,9 @@
 #include <QApplication>
 #include <QDebug>
 #include <QElapsedTimer>
-#include <QPainter>
 #include <QMessageBox>
-#include <cvblob.h>
 
-#include "imageProcess.h"
-
-const int IMAGE_PROCESS_PERIOD = 100;
+const int IMAGE_PROCESS_PERIOD = 33;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
@@ -75,8 +71,6 @@ bool MainWindow::calibrate(const cv::Mat& frame) {
 }
 
 cv::Mat MainWindow::findObject(const cv::Mat& frame) {
-	static cvb::CvBlobs blob;
-	static auto bgBlob = cvCreateImage(cvSize(1280, 720), IPL_DEPTH_LABEL, 1);
 	cv::Mat mask, result = frame;
 	mSubtractor(frame, mask, 0);
 	cv::erode(mask, mask, cv::Mat());
@@ -84,17 +78,22 @@ cv::Mat MainWindow::findObject(const cv::Mat& frame) {
 	cv::imshow("test", mask);
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarchy;
-	cv::findContours(mask, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+	cv::findContours(mask, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
 	for (int i = 0; i < contours.size(); ++i) {
-		cv::Scalar color = cv::Scalar(rand() % 255, rand() % 255, rand() % 255);
-		cv::drawContours(result, contours, i, color, 1, 8, hierarchy);
+		if (contours[i].size() < 200 || hierarchy[i][3] != -1) continue;
+		//cv::Scalar color = cv::Scalar(rand() % 255, rand() % 255, rand() % 255);
+		//cv::drawContours(result, contours, i, color, 1, 8, hierarchy);
+		auto rect = cv::minAreaRect(contours[i]);
+		cv::Point2f rectPoints[4];
+		rect.points(rectPoints);
+		for (int j = 0; j < 4; ++j) {
+			cv::line(result,
+					 rectPoints[j],
+					 rectPoints[(j + 1) % 4],
+					 cv::Scalar(0, 0, 255),
+					 1,
+					 8);
+		}
 	}
-	//IplImage iplMask = mask, imgResult = frame;
-	//cvLabel(&iplMask, bgBlob, blob);
-	//cvFilterByArea(blob, 30000, 3000000);
-	//cvRenderContour(blob, &imgResult);
-	//cvRenderBlobs(bgBlob, blob, &imgResult, &imgResult,
-	//			  CV_BLOB_RENDER_BOUNDING_BOX | CV_BLOB_RENDER_ANGLE);
-	//return cv::Mat(&imgResult);
 	return result;
 }

@@ -7,7 +7,7 @@
 #include "imageProcess.h"
 
 const int CAMERA_INDEX = 1;
-const int VIDEO_PERIOD = 100;
+const int VIDEO_PERIOD = 33;
 const int VIDEO_START_DELAY = 1000;
 
 VideoFrame::VideoFrame(QWidget *parent) : QFrame(parent),
