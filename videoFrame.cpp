@@ -7,12 +7,13 @@
 #include "imageProcess.h"
 
 const int CAMERA_INDEX = 1;
-const int VIDEO_PERIOD = 33;
+const int VIDEO_PERIOD = 100;
 const int VIDEO_START_DELAY = 1000;
 
 VideoFrame::VideoFrame(QWidget *parent) : QFrame(parent),
 										  mVideoTimer(this),
-										  mVideo(CAMERA_INDEX) {
+										  mVideo(CAMERA_INDEX),
+										  mUpdate(true) {
 	mVideo.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
 	mVideo.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
 	connect(&mVideoTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -29,7 +30,11 @@ const cv::Mat& VideoFrame::curFrame() {
 }
 
 void VideoFrame::setResult(const cv::Mat& input) {
-	this->mResult = input;
+	this->mResult = input.clone();
+}
+
+void VideoFrame::setUpdate(bool input) {
+	this->mUpdate = input;
 }
 
 void VideoFrame::startVieo() {
@@ -37,7 +42,7 @@ void VideoFrame::startVieo() {
 }
 
 void VideoFrame::loadFrame() {
-	if (!mVideo.read(this->mCurFrame)) {
+	if (this->mUpdate && !mVideo.read(this->mCurFrame)) {
 		QMessageBox::critical(this, "Video error", "Failed to load image from camera!");
 		QApplication::quit();
 	}

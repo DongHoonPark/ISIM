@@ -43,3 +43,11 @@ void cvFilterByShell(cvb::CvBlobs &blobs,
 		else ++it;
 	}
 }
+
+void cvRenderContour(cvb::CvBlobs &blob, IplImage* imgDest) {
+	for (auto it = blob.begin(); it != blob.end(); ++it) {
+		cvRenderContourChainCode(
+			&it->second->contour, imgDest, cvScalar(rand() % 255, rand() % 255, rand() % 255)
+		);
+	}
+}

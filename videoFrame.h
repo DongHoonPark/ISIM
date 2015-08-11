@@ -15,9 +15,11 @@ class VideoFrame : public QFrame {
 		~VideoFrame();
 		const cv::Mat& curFrame();
 		void setResult(const cv::Mat& input);
+		void setUpdate(bool input);
 
 	private:
 		QTimer mVideoTimer;
+		bool mUpdate;
 		cv::VideoCapture mVideo;
 		cv::Mat mCurFrame;
 		cv::Mat mResult;
