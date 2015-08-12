@@ -41,7 +41,7 @@ void MainWindow::imageProcess() {
 		}
 	}
 	this->mVideoFrame->setResult(result);
-	//qDebug() << time.elapsed();
+	qDebug() << time.elapsed();
 }
 
 // returns true if calibration finished
