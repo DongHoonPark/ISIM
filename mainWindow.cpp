@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QMessageBox>
+#include <QserialPort>
+#include <QserialPortInfo>
 
 const int IMAGE_PROCESS_PERIOD = 33;
 
@@ -17,6 +19,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 	cv::namedWindow("test");
+
+	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
+	*portInfoList = QSerialPortInfo::availablePorts();
+	if (portInfoList->size() == 0){
+		ui.serialCombox->addItem("No port");
+	}
+	for (int i = 0; i < portInfoList->size(); i++){
+		ui.serialCombox->addItem(portInfoList->at(i).portName());
+	}
+	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+
+	for (int i = 0; i < 6; i++){
+		isim[i] = new IsimControl(i, serial);
+	}
+
 }
 
 MainWindow::~MainWindow() {
