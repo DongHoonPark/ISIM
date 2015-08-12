@@ -28,12 +28,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	for (int i = 0; i < portInfoList->size(); i++){
 		ui.serialCombox->addItem(portInfoList->at(i).portName());
 	}
-	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+/*	connect(serial, SIGNAL(serial->readyRead()), this, SLOT(readData()));
 
 	for (int i = 0; i < 6; i++){
 		isim[i] = new IsimControl(i, serial);
 	}
-
+	*/
 }
 
 MainWindow::~MainWindow() {
@@ -113,4 +113,91 @@ cv::Mat MainWindow::findObject(const cv::Mat& frame) {
 		}
 	}
 	return result;
+}
+
+void MainWindow::serialCtrlBtnClicked(){
+	if (ui.serialCtrlBtn->text().operator == ("OPEN")){
+
+		serial->setPortName(ui.serialCombox->itemText(ui.serialCombox->currentIndex()));
+		serial->setBaudRate(115200);
+
+		if (serial->open(QIODevice::ReadWrite)){
+			ui.serialCtrlBtn->setText("CLOSE");
+		}
+		else{
+			QMessageBox serialErrorMessageBox;
+			serialErrorMessageBox.setText("Serialport cannnot open!");
+			serialErrorMessageBox.exec();
+		}
+	}
+	else{
+		serial->close();
+		ui.serialCtrlBtn->setText("OPEN");
+	}
+}
+
+void MainWindow::serialSendBtnClicked(){
+	if (serial->isOpen()){
+
+	}
+	else{
+		QMessageBox serialErrorMessageBox;
+		serialErrorMessageBox.setText("Serialport is not open!");
+		serialErrorMessageBox.exec();
+	}
+}
+
+
+void MainWindow::payloadDetectionBtnClicked(){
+
+}
+
+void MainWindow::readData(){
+	char *data;
+	if (serial->isReadable()){
+		if (serial->canReadLine()){
+			data = new char[30];
+			serial->readLine(data, 30);
+
+			QString strCmd(data);
+			QString cmd = strCmd.mid(0, 2);
+			QString cmdWithoutOpcode = strCmd.mid(2);
+
+			QStringList *strParams = new QStringList();
+			*strParams = cmdWithoutOpcode.split('\t');
+			float *params = new float[cmdWithoutOpcode.size()];
+			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
+			{
+				params[i] = (*strParams)[i].toFloat();
+			}
+
+			if (cmd.operator==("PN"))
+			{
+				QMessageBox serialErrorMessageBox;
+				serialErrorMessageBox.setText("Ping recieved from ISIM");
+				serialErrorMessageBox.exec();
+			}
+			else if (cmd.operator==("GY")){
+
+			}
+			else if (false){
+
+			}
+
+			delete(params);
+			delete(data);
+
+		}
+		else{
+			return;
+		}
+	}
+	else{
+		return;
+	}
+
+}
+
+void MainWindow::pingBtnClicked(){
+	ui.controlIsimSelectCombox->currentText().mid(4, 1);
 }
