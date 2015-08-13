@@ -33,6 +33,9 @@ class MainWindow : public QMainWindow {
 	private:
 		bool calibrate(const cv::Mat& frame);
 		cv::Mat findObject(const cv::Mat& frame);
+		cv::Mat findISIM(const cv::Mat& frame);
+		cv::Scalar mIsimColorMin[5];
+		cv::Scalar mIsimColorMax[5];
 		cv::BackgroundSubtractorMOG2 mSubtractor;
 		VideoFrame* mVideoFrame;
 		QTimer mImageProcessTimer;

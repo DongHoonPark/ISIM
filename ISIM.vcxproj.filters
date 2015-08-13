@@ -59,7 +59,7 @@
     <ClCompile Include="imageProcess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\ISIM_old\isimControl.cpp">
+    <ClCompile Include="isimControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_ISIM.cpp">
@@ -76,7 +76,7 @@
     <CustomBuild Include="videoFrame.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\ISIM_old\ISIM.ui">
+    <CustomBuild Include="ISIM.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -87,7 +87,7 @@
     <ClInclude Include="GeneratedFiles\ui_ISIM.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\ISIM_old\isimControl.h">
+    <ClInclude Include="isimControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

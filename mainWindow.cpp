@@ -1,4 +1,5 @@
 #include "mainWindow.h"
+#include "videoFrame.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -18,7 +19,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	mVideoFrame = this->findChild<VideoFrame*>("video");
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
-	cv::namedWindow("test");
+	mIsimColorMin[0] = cv::Scalar(20 * 0.5, 30 * 2.55, 45 * 2.55);
+	mIsimColorMin[1] = cv::Scalar(110 * 0.5, 30 * 2.55, 45 * 2.55);
+	mIsimColorMin[2] = cv::Scalar(0, 0, 0);
+	mIsimColorMin[3] = cv::Scalar(0, 0, 0);
+	mIsimColorMin[4] = cv::Scalar(0, 0, 0);
+	mIsimColorMax[0] = cv::Scalar(45 * 0.5, 100 * 2.55, 100 * 2.55);
+	mIsimColorMax[1] = cv::Scalar(150 * 0.5, 100 * 2.55, 100 * 2.55);
+	mIsimColorMax[2] = cv::Scalar(0, 0, 0);
+	mIsimColorMax[3] = cv::Scalar(0, 0, 0);
+	mIsimColorMax[4] = cv::Scalar(0, 0, 0);
 
 	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
 	*portInfoList = QSerialPortInfo::availablePorts();
@@ -45,7 +55,7 @@ void MainWindow::imageProcess() {
 	QElapsedTimer time;
 	time.start();
 	switch (mCurState) {
-		case CALIBRATION: {
+		case CALIBRATION : {
 			result = this->mVideoFrame->curFrame();
 			if (this->calibrate(mVideoFrame->curFrame())) {
 				mCurState = FIND_OBJECT;
@@ -53,8 +63,12 @@ void MainWindow::imageProcess() {
 			}
 			break;
 		}
-		case FIND_OBJECT: {
+		case FIND_OBJECT : {
 			result = this->findObject(mVideoFrame->curFrame());
+			break;
+		}
+		case FIND_ISIM: {
+			result = this->findISIM(mVideoFrame->curFrame());
 			break;
 		}
 	}
@@ -88,12 +102,40 @@ bool MainWindow::calibrate(const cv::Mat& frame) {
 	else return false;
 }
 
+cv::Mat MainWindow::findISIM(const cv::Mat& frame) {
+	const int ISIM_SIZE_MIN = 200;
+	const int ISIM_SIZE_MAX = 1000;
+	cv::Mat result = frame;
+	for (int i = 0; i < 5; ++i) {
+		cv::Mat thresFrame;
+		cv::inRange(frame, thresFrame, mIsimColorMin[0], mIsimColorMax[0]);
+		cv::erode(thresFrame, thresFrame, cv::Mat());
+		cv::dilate(thresFrame, thresFrame, cv::Mat());
+		std::vector<std::vector<cv::Point>> contours;
+		std::vector<cv::Vec4i> hierarchy;
+		cv::findContours(thresFrame, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
+		if (ISIM_SIZE_MIN <= contours[i].size() && contours[i].size() < ISIM_SIZE_MIN) {
+			auto rect = cv::minAreaRect(contours[i]);
+			cv::Point2f rectPoints[4];
+			rect.points(rectPoints);
+			for (int j = 0; j < 4; ++j) {
+				cv::line(result,
+					rectPoints[j],
+					rectPoints[(j + 1) % 4],
+					cv::Scalar(0, 0, 255),
+					1,
+					8);
+			}
+		}
+	}
+	return result;
+}
+
 cv::Mat MainWindow::findObject(const cv::Mat& frame) {
 	cv::Mat mask, result = frame;
 	mSubtractor(frame, mask, 0);
 	cv::erode(mask, mask, cv::Mat());
 	cv::dilate(mask, mask, cv::Mat());
-	cv::imshow("test", mask);
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarchy;
 	cv::findContours(mask, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
