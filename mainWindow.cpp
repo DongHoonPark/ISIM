@@ -28,8 +28,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	for (int i = 0; i < portInfoList->size(); i++){
 		ui.serialCombox->addItem(portInfoList->at(i).portName());
 	}
-/*	connect(serial, SIGNAL(serial->readyRead()), this, SLOT(readData()));
-
+	/*
+	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+	
 	for (int i = 0; i < 6; i++){
 		isim[i] = new IsimControl(i, serial);
 	}
