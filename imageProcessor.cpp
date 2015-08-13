@@ -1,5 +1,10 @@
 #include "imageProcessor.h"
 
+const int MAX_TRIGGER = 100;
+const int MAX_DELAY = 30;
+const int ISIM_SIZE_MIN = 200;
+const int ISIM_SIZE_MAX = 1000;
+
 ImageProcessor::ImageProcessor() : mSubtractor(500, 6.0f*6.0f, true){
 	mIsimColorMin[0] = cv::Scalar(20 * 0.5, 30 * 2.55, 45 * 2.55);
 	mIsimColorMin[1] = cv::Scalar(110 * 0.5, 30 * 2.55, 45 * 2.55);
@@ -20,7 +25,6 @@ ImageProcessor::~ImageProcessor() {
 // returns true if calibration finished
 bool ImageProcessor::calibrate(const cv::Mat& frame) {
 	static unsigned int trigger = 0, delay = 0;
-	const int MAX_TRIGGER = 100, MAX_DELAY = 30;
 	// initial delay for camera
 	if (delay < MAX_DELAY) {
 		++delay;
@@ -43,8 +47,6 @@ bool ImageProcessor::calibrate(const cv::Mat& frame) {
 }
 
 cv::Mat ImageProcessor::findISIM(const cv::Mat& frame) {
-	const int ISIM_SIZE_MIN = 200;
-	const int ISIM_SIZE_MAX = 1000;
 	cv::Mat result = frame;
 	for (int i = 0; i < 5; ++i) {
 		cv::Mat thresFrame;

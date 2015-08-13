@@ -1,5 +1,4 @@
 #include "mainWindow.h"
-#include "videoFrame.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -18,15 +17,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	this->setWindowTitle("Calibrating");
 	mVideoFrame = this->findChild<VideoFrame*>("video");
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
-	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 
-	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
-	*portInfoList = QSerialPortInfo::availablePorts();
-	if (portInfoList->size() == 0){
+	const auto& portInfoList = QSerialPortInfo::availablePorts();
+	if (portInfoList.size() == 0){
 		ui.serialCombox->addItem("No port");
 	}
-	for (int i = 0; i < portInfoList->size(); i++){
-		ui.serialCombox->addItem(portInfoList->at(i).portName());
+	for (int i = 0; i < portInfoList.size(); ++i){
+		ui.serialCombox->addItem(portInfoList[i].portName());
 	}
 	/*
 	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
@@ -35,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 		isim[i] = new IsimControl(i, serial);
 	}
 	*/
+	// this line should be last line of this constructor
+	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 }
 
 MainWindow::~MainWindow() {
@@ -42,14 +41,14 @@ MainWindow::~MainWindow() {
 
 void MainWindow::imageProcess() {
 	cv::Mat result;
-	QElapsedTimer time;
-	time.start();
+	QElapsedTimer elapsedTime;
+	elapsedTime.start();
 	switch (mCurState) {
 		case CALIBRATION : {
-			result = this->mVideoFrame->curFrame();
+			result = mVideoFrame->curFrame();
 			if (mProcessor.calibrate(mVideoFrame->curFrame())) {
 				mCurState = FIND_OBJECT;
-				this->setWindowTitle("Find Object");
+				setWindowTitle("Find Object");
 			}
 			break;
 		}
@@ -63,13 +62,11 @@ void MainWindow::imageProcess() {
 		}
 	}
 	this->mVideoFrame->setResult(result);
-	qDebug() << time.elapsed();
+	qDebug() << elapsedTime.elapsed();
 }
 
-
 void MainWindow::serialCtrlBtnClicked(){
-	if (ui.serialCtrlBtn->text().operator == ("OPEN")){
-
+	if (ui.serialCtrlBtn->text() == "OPEN"){
 		serial->setPortName(ui.serialCombox->itemText(ui.serialCombox->currentIndex()));
 		serial->setBaudRate(115200);
 
@@ -77,9 +74,7 @@ void MainWindow::serialCtrlBtnClicked(){
 			ui.serialCtrlBtn->setText("CLOSE");
 		}
 		else{
-			QMessageBox serialErrorMessageBox;
-			serialErrorMessageBox.setText("Serialport cannnot open!");
-			serialErrorMessageBox.exec();
+			QMessageBox::critical(this, "Serial error", "Failed to open serial port!");
 		}
 	}
 	else{
@@ -93,9 +88,7 @@ void MainWindow::serialSendBtnClicked(){
 
 	}
 	else{
-		QMessageBox serialErrorMessageBox;
-		serialErrorMessageBox.setText("Serialport is not open!");
-		serialErrorMessageBox.exec();
+		QMessageBox::critical(this, "Serial Error", "Serialport is not open!");
 	}
 }
 
@@ -105,10 +98,9 @@ void MainWindow::payloadDetectionBtnClicked(){
 }
 
 void MainWindow::readData(){
-	char *data;
+	char data[30];
 	if (serial->isReadable()){
 		if (serial->canReadLine()){
-			data = new char[30];
 			serial->readLine(data, 30);
 
 			QString strCmd(data);
@@ -118,27 +110,21 @@ void MainWindow::readData(){
 			QStringList *strParams = new QStringList();
 			*strParams = cmdWithoutOpcode.split('\t');
 			float *params = new float[cmdWithoutOpcode.size()];
-			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
-			{
+			for (int i = 0; i < cmdWithoutOpcode.size(); i++) {
 				params[i] = (*strParams)[i].toFloat();
 			}
 
-			if (cmd.operator==("PN"))
-			{
-				QMessageBox serialErrorMessageBox;
-				serialErrorMessageBox.setText("Ping recieved from ISIM");
-				serialErrorMessageBox.exec();
+			if (cmd == "PN") {
+				QMessageBox::information(this, "Ping", "Ping recieved from ISIM!");
 			}
-			else if (cmd.operator==("GY")){
+			else if (cmd == "GY") {
 
 			}
-			else if (false){
+			else if (false) {
 
 			}
 
 			delete(params);
-			delete(data);
-
 		}
 		else{
 			return;
