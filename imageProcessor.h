@@ -10,6 +10,7 @@ class ImageProcessor {
 		bool calibrate(const cv::Mat& frame);
 		cv::Mat findObject(const cv::Mat& frame);
 		cv::Mat findISIM(const cv::Mat& frame);
+
 	private:
 		cv::Scalar mIsimColorMin[5];
 		cv::Scalar mIsimColorMax[5];

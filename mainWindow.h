@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QSerialPort>
-#include <QSerialPortInfo>
 #include <QMainWindow>
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
 #include "ui_ISIM.h"
 
@@ -23,6 +23,7 @@ class MainWindow : public QMainWindow {
 		FUSION,
 		MANUAL
 	};
+
 	public:
 		MainWindow(QWidget *parent = 0);
 		~MainWindow();
@@ -40,7 +41,7 @@ class MainWindow : public QMainWindow {
 		ImageProcessor mProcessor;
 		QTimer mImageProcessTimer;
 		MainWindow::State mCurState;
-		QSerialPort* mSerial;
+		QSerialPort mSerial;
 		IsimControl** mIsim;
 
 	private slots:
