@@ -39,7 +39,7 @@ class MainWindow : public QMainWindow {
 		MainWindow::State mCurState;
 		Ui::MainWindow ui;
 		QSerialPort* serial;
-		IsimControl** isim;
+		IsimControl* isim[6] ;
 
 	private slots:
 		void imageProcess();

@@ -11,7 +11,7 @@ const int IMAGE_PROCESS_PERIOD = 33;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
-										  mCurState(CALIBRATION),
+										  mCurState(FIND_ISIM),
 										  mSubtractor(500, 6.0f*6.0f, true) {
 	ui.setupUi(this);
 	this->setWindowTitle("Calibrating");
@@ -30,11 +30,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	}
 	/*
 	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-	
+	*/
 	for (int i = 0; i < 6; i++){
 		isim[i] = new IsimControl(i, serial);
 	}
-	*/
 }
 
 MainWindow::~MainWindow() {

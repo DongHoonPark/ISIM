@@ -6,7 +6,7 @@
 
 #include "imageProcess.h"
 
-const int CAMERA_INDEX = 2;
+const int CAMERA_INDEX = 0;
 const int VIDEO_PERIOD = 33;
 const int VIDEO_START_DELAY = 1000;
 
