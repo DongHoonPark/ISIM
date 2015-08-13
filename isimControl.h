@@ -29,5 +29,11 @@ private:
 	float roll;
 	float pitch;
 	bool switchPressed;
+	float rmotorValue;
+	float lmotorValue;
+	float rmagnetValue;
+	float lmagnetValue;
+	float rdxlValue;
+	float ldxlValue;
 	
 };

@@ -3,6 +3,12 @@
 IsimControl::IsimControl(int id, QSerialPort* xbee){
 	this->id = id;
 	this->xbee = xbee;
+	this->ldxlValue = 512;
+	this->rdxlValue = 512;
+	this->lmagnetValue = 0;
+	this->rmagnetValue = 0;
+	this->lmotorValue = 0;
+	this->rmotorValue = 0;
 }
 
 IsimControl::~IsimControl(){
@@ -11,16 +17,15 @@ IsimControl::~IsimControl(){
 
 void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* params){
 	QByteArray* instructionByteArray = new QByteArray();
-	instructionByteArray->resize(3 + 1 + 1 + 1 + 4*length + 1);
+	int instIndex = 0;
 	/*Insert Start Index*/
-	for (int i = 0; i < 3; i++)
-	{
-		instructionByteArray->append(0xFF);
+	for (int i = 0; i < 3; i++){
+		instructionByteArray->insert(instIndex++, 0xFF);
 	}
 	/*Insert ID, Length, Instruction*/
-	instructionByteArray->append((char)(this->id));
-	instructionByteArray->append(length);
-	instructionByteArray->append(instruction);
+	instructionByteArray->insert(instIndex++,(char)(this->id) );
+	instructionByteArray->insert(instIndex++, length);
+	instructionByteArray->insert(instIndex++, instruction);
 	/*Insert Data*/
 	for (int i = 0; i < length; i++)
 	{
@@ -46,9 +51,11 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 			*param_H = -(*param_H);
 			*param_L = -(*param_L);
 		}
+
+
 	}
 	/*Insert CheckSum*/
-	instructionByteArray->append(0xFE);
+	instructionByteArray->insert(instIndex++,0xFE);
 	/*Send Data after checking port*/
 	if (xbee->isOpen()){
 		xbee->write(*instructionByteArray);
