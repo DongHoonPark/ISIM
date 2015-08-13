@@ -28,6 +28,8 @@ class MainWindow : public QMainWindow {
 		void serialSendBtnClicked();
 		void pingBtnClicked();
 		void payloadDetectionBtnClicked();
+		void isimControlSelectionChanged(int);
+		void isimHomeSelectionChanged(int);
 		void readData();
 
 	private:
@@ -40,6 +42,7 @@ class MainWindow : public QMainWindow {
 		Ui::MainWindow ui;
 		QSerialPort* serial;
 		IsimControl* isim[6] ;
+		IsimControl* isimCurrentControl;
 
 	private slots:
 		void imageProcess();

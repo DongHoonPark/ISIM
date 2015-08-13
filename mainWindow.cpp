@@ -31,9 +31,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	/*
 	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 	*/
-	for (int i = 0; i < 6; i++){
-		isim[i] = new IsimControl(i, serial);
+	for (int i = 0; i < 5; i++){
+		isim[i] = new IsimControl(i+1, serial);
 	}
+	isimCurrentControl = isim[0];
 }
 
 MainWindow::~MainWindow() {
@@ -201,3 +202,12 @@ void MainWindow::readData(){
 void MainWindow::pingBtnClicked(){
 	ui.controlIsimSelectCombox->currentText().mid(4, 1);
 }
+
+void MainWindow::isimControlSelectionChanged(int selectionValue){
+	isimCurrentControl = isim[selectionValue];
+}
+
+void MainWindow::isimHomeSelectionChanged(int selectionValue){
+
+}
+
