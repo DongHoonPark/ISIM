@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QMessageBox>
 
-#include "imageProcess.h"
+#include "misc.h"
 
 const int CAMERA_INDEX = 0;
 const int VIDEO_PERIOD = 33;

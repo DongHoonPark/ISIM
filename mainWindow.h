@@ -2,10 +2,13 @@
 
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include "isimControl.h"
 #include <QMainWindow>
 #include <QTimer>
 #include "ui_ISIM.h"
+
+#include "videoFrame.h"
+#include "imageProcessor.h"
+#include "isimControl.h"
 
 class MainWindow : public QMainWindow {
 
@@ -23,6 +26,7 @@ class MainWindow : public QMainWindow {
 	public:
 		MainWindow(QWidget *parent = 0);
 		~MainWindow();
+
 	public slots:
 		void serialCtrlBtnClicked();
 		void serialSendBtnClicked();
@@ -31,16 +35,11 @@ class MainWindow : public QMainWindow {
 		void readData();
 
 	private:
-		bool calibrate(const cv::Mat& frame);
-		cv::Mat findObject(const cv::Mat& frame);
-		cv::Mat findISIM(const cv::Mat& frame);
-		cv::Scalar mIsimColorMin[5];
-		cv::Scalar mIsimColorMax[5];
-		cv::BackgroundSubtractorMOG2 mSubtractor;
+		Ui::MainWindow ui;
 		VideoFrame* mVideoFrame;
+		ImageProcessor mProcessor;
 		QTimer mImageProcessTimer;
 		MainWindow::State mCurState;
-		Ui::MainWindow ui;
 		QSerialPort* serial;
 		IsimControl** isim;
 
