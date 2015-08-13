@@ -40,8 +40,8 @@ class MainWindow : public QMainWindow {
 		ImageProcessor mProcessor;
 		QTimer mImageProcessTimer;
 		MainWindow::State mCurState;
-		QSerialPort* serial;
-		IsimControl** isim;
+		QSerialPort* mSerial;
+		IsimControl** mIsim;
 
 	private slots:
 		void imageProcess();

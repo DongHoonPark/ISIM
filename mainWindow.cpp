@@ -67,10 +67,10 @@ void MainWindow::imageProcess() {
 
 void MainWindow::serialCtrlBtnClicked(){
 	if (ui.serialCtrlBtn->text() == "OPEN"){
-		serial->setPortName(ui.serialCombox->itemText(ui.serialCombox->currentIndex()));
-		serial->setBaudRate(115200);
+		mSerial->setPortName(ui.serialCombox->itemText(ui.serialCombox->currentIndex()));
+		mSerial->setBaudRate(115200);
 
-		if (serial->open(QIODevice::ReadWrite)){
+		if (mSerial->open(QIODevice::ReadWrite)){
 			ui.serialCtrlBtn->setText("CLOSE");
 		}
 		else{
@@ -78,13 +78,13 @@ void MainWindow::serialCtrlBtnClicked(){
 		}
 	}
 	else{
-		serial->close();
+		mSerial->close();
 		ui.serialCtrlBtn->setText("OPEN");
 	}
 }
 
 void MainWindow::serialSendBtnClicked(){
-	if (serial->isOpen()){
+	if (mSerial->isOpen()){
 
 	}
 	else{
@@ -99,9 +99,9 @@ void MainWindow::payloadDetectionBtnClicked(){
 
 void MainWindow::readData(){
 	char data[30];
-	if (serial->isReadable()){
-		if (serial->canReadLine()){
-			serial->readLine(data, 30);
+	if (mSerial->isReadable()){
+		if (mSerial->canReadLine()){
+			mSerial->readLine(data, 30);
 
 			QString strCmd(data);
 			QString cmd = strCmd.mid(0, 2);
