@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1302</width>
-    <height>879</height>
+    <width>1280</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,14 +43,211 @@
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
+   <widget class="QPushButton" name="serialCtrlBtn">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>10</y>
+      <width>75</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>OPEN</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="serialCombox">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>10</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="serialSendBtn">
+    <property name="geometry">
+     <rect>
+      <x>1000</x>
+      <y>10</y>
+      <width>75</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SEND</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="payloadDetectionBtn">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>40</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Payload Detection</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="payloadWidthSpinbox">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>40</y>
+      <width>62</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="payloadHeightSpinbox">
+    <property name="geometry">
+     <rect>
+      <x>1190</x>
+      <y>40</y>
+      <width>62</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="assemblePathGenerationBtn">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>90</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Assemble Path Generation</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="isPathViewCheckbox">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>100</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
+    </property>
+    <property name="text">
+     <string>Path View</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>220</y>
+      <width>441</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="controlIsimSelectCombox">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>90</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>ISIM1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ISIM2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ISIM3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ISIM4'</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ISIM5</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="destinationHomeSelectCombox">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>90</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Home1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Home2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Home3</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="pingBtnre">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>130</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PING</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1302</width>
-     <height>26</height>
+     <width>1280</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -65,5 +262,76 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>serialCtrlBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>serialCtrlBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>944</x>
+     <y>38</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>952</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>serialSendBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>serialSendBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1031</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1083</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>payloadDetectionBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>payloadDetectionBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>848</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>841</x>
+     <y>101</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pingBtnre</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pingBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>921</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>985</x>
+     <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>serialCtrlBtnClicked()</slot>
+  <slot>serialSendBtnClicked()</slot>
+  <slot>payloadDetectionBtnClicked()</slot>
+  <slot>pingBtnClicked()</slot>
+ </slots>
 </ui>
