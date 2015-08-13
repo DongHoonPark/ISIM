@@ -1,4 +1,4 @@
-#include "imageProcess.h"
+#include "misc.h"
 
 QImage Mat2QImage(const cv::Mat& src) {
 	QImage dest(src.cols, src.rows, QImage::Format_ARGB32);
