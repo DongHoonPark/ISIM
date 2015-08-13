@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 	cv::namedWindow("test");
 
+	serial = new QSerialPort();
 	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
 	*portInfoList = QSerialPortInfo::availablePorts();
 	if (portInfoList->size() == 0){
@@ -28,9 +29,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	for (int i = 0; i < portInfoList->size(); i++){
 		ui.serialCombox->addItem(portInfoList->at(i).portName());
 	}
-	/*
+	
 	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-	*/
+	
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, serial);
 	}
@@ -200,7 +201,8 @@ void MainWindow::readData(){
 }
 
 void MainWindow::pingBtnClicked(){
-	ui.controlIsimSelectCombox->currentText().mid(4, 1);
+	float pingNulldata[] = { 0, 0, 0 };
+	isimCurrentControl->sendInstruction(0, 0x05, pingNulldata);
 }
 
 void MainWindow::isimControlSelectionChanged(int selectionValue){
@@ -211,3 +213,13 @@ void MainWindow::isimHomeSelectionChanged(int selectionValue){
 
 }
 
+void MainWindow::isimControlValueChanged(){
+	if (serial->isOpen()){
+
+	}
+	else{
+		QMessageBox serialErrorMessageBox;
+		serialErrorMessageBox.setText("Please open serialport first!");
+		serialErrorMessageBox.exec();
+	}
+}

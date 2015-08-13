@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow {
 		void payloadDetectionBtnClicked();
 		void isimControlSelectionChanged(int);
 		void isimHomeSelectionChanged(int);
+		void isimControlValueChanged();
 		void readData();
 
 	private:
