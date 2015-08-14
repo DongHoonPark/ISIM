@@ -466,23 +466,19 @@
      </item>
     </layout>
    </widget>
-   <zorder>pushButton</zorder>
-   <zorder>video</zorder>
-   <zorder>serialCtrlBtn</zorder>
-   <zorder>serialCombox</zorder>
-   <zorder>serialSendBtn</zorder>
-   <zorder>payloadDetectionBtn</zorder>
-   <zorder>payloadWidthSpinbox</zorder>
-   <zorder>payloadHeightSpinbox</zorder>
-   <zorder>assemblePathGenerationBtn</zorder>
-   <zorder>isPathViewCheckbox</zorder>
-   <zorder>controlIsimSelectCombox</zorder>
-   <zorder>destinationHomeSelectCombox</zorder>
-   <zorder>pingBtnre</zorder>
-   <zorder>verticalLayoutWidget</zorder>
-   <zorder>label_2</zorder>
-   <zorder>verticalLayoutWidget_2</zorder>
-   <zorder>verticalLayoutWidget_3</zorder>
+   <widget class="QTextEdit" name="serialConsole">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>380</y>
+      <width>461</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -798,7 +794,7 @@
    <sender>destinationHomeSelectCombox</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>MainWindow</receiver>
-   <slot>isimHomeSlectionChanged(int)</slot>
+   <slot>isimHomeSelectionChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>903</x>
@@ -930,7 +926,7 @@
   <slot>pingBtnClicked()</slot>
   <slot>assemblePathGenBtnClicked()</slot>
   <slot>isimControlSelectionChanged(int)</slot>
-  <slot>isimHomeSlectionChanged(int)</slot>
+  <slot>isimHomeSelectionChanged(int)</slot>
   <slot>lmotorInfoChanged(int)</slot>
   <slot>rmotorInfoChanged(int)</slot>
   <slot>ldxlInfoChanged(int)</slot>

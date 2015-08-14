@@ -31,7 +31,9 @@ class MainWindow : public QMainWindow {
 		void isimControlSelectionChanged(int);
 		void isimHomeSelectionChanged(int);
 		void isimControlValueChanged();
+		void assemblePathGenBtnClicked();
 		void readData();
+		void ldxlInfoChanged(int);
 
 	private:
 		bool calibrate(const cv::Mat& frame);
@@ -45,6 +47,7 @@ class MainWindow : public QMainWindow {
 		IsimControl* isim[6] ;
 		IsimControl* isimCurrentControl;
 		QTimer* serialTheadTimer;
+		QString* cmdString;
 
 	private slots:
 		void imageProcess();

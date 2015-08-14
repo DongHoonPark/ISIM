@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 	cv::namedWindow("test");
 
+	cmdString = new QString();
+
 	serial = new QSerialPort();
 	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
 	*portInfoList = QSerialPortInfo::availablePorts();
@@ -33,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	serialTheadTimer = new QTimer(this);
 
 	connect(serialTheadTimer, SIGNAL(timeout()), this, SLOT(readData()));
+	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 	serialTheadTimer->start(5);
 	
 	for (int i = 0; i < 5; i++){
@@ -161,13 +164,19 @@ void MainWindow::payloadDetectionBtnClicked(){
 }
 
 void MainWindow::readData(){
+	
 	char *data;
-	if (serial->isReadable()){
-		if (serial->canReadLine()){
+	if (serial->bytesAvailable() > 0){
 			data = new char[30];
 			serial->readLine(data, 30);
 
 			QString strCmd(data);
+			cmdString->operator+=(strCmd);
+
+			if (cmdString->indexOf("\r\n") == -1){
+				return;
+			}
+			ui.serialConsole->append(strCmd);
 			strCmd.remove("\r\n");
 			if (strCmd.at(0) == '#'){
 				return;
@@ -199,14 +208,7 @@ void MainWindow::readData(){
 			else if (false){
 
 			}
-
-			delete(params);
-			delete(data);
-
-		}
-		else{
-			return;
-		}
+		
 	}
 	else{
 		return;
@@ -236,4 +238,10 @@ void MainWindow::isimControlValueChanged(){
 		serialErrorMessageBox.setText("Please open serialport first!");
 		serialErrorMessageBox.exec();
 	}
+}
+void MainWindow::ldxlInfoChanged(int){
+
+}
+void MainWindow::assemblePathGenBtnClicked(){
+
 }
