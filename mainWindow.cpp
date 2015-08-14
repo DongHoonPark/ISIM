@@ -4,157 +4,102 @@
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QMessageBox>
-#include <QserialPort>
-#include <QserialPortInfo>
 
 const int IMAGE_PROCESS_PERIOD = 33;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
-										  mCurState(FIND_ISIM),
-										  mSubtractor(500, 6.0f*6.0f, true) {
+										  mCurState(MANUAL),
+										  mSerial(),
+										  mProcessor(){
+	// basic parameter settings
 	ui.setupUi(this);
 	this->setWindowTitle("Calibrating");
 	mVideoFrame = this->findChild<VideoFrame*>("video");
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
-	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
-	cv::namedWindow("test");
 
 	cmdString = new QString();
-
-	serial = new QSerialPort();
-	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
-	*portInfoList = QSerialPortInfo::availablePorts();
-	if (portInfoList->size() == 0){
+	mSerial.setBaudRate(115200);
+	// finding & adding ports
+	
+	const auto& portInfoList = QSerialPortInfo::availablePorts();
+	if (portInfoList.size() == 0){
 		ui.serialCombox->addItem("No port");
 	}
-	for (int i = 0; i < portInfoList->size(); i++){
-		ui.serialCombox->addItem(portInfoList->at(i).portName());
+	for (int i = 0; i < portInfoList.size(); ++i){
+		ui.serialCombox->addItem(portInfoList.at(i).portName());
 	}
 	
 	serialTheadTimer = new QTimer(this);
 
 	connect(serialTheadTimer, SIGNAL(timeout()), this, SLOT(readData()));
-	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-	serialTheadTimer->start(5);
+	connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
+	//serialTheadTimer->start(5);
 	
 	for (int i = 0; i < 5; i++){
-		isim[i] = new IsimControl(i+1, serial);
+		isim[i] = new IsimControl(i+1, &mSerial);
 	}
 	isimCurrentControl = isim[0];
+	// this line should be last line of this constructor
+	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
 }
 
 MainWindow::~MainWindow() {
-	delete(&ui);
-	delete(serial);
 	delete(serialTheadTimer);
 }
 
 void MainWindow::imageProcess() {
 	cv::Mat result;
-	QElapsedTimer time;
-	time.start();
+	QElapsedTimer elapsedTime;
+	elapsedTime.start();
 	switch (mCurState) {
-		case CALIBRATION: {
-			result = this->mVideoFrame->curFrame();
-			if (this->calibrate(mVideoFrame->curFrame())) {
+		case CALIBRATION : {
+			result = mVideoFrame->curFrame();
+			if (mProcessor.calibrate(mVideoFrame->curFrame())) {
 				mCurState = FIND_OBJECT;
-				this->setWindowTitle("Find Object");
+				setWindowTitle("Find Object");
 			}
 			break;
 		}
-		case FIND_OBJECT: {
-			result = this->findObject(mVideoFrame->curFrame());
+		case FIND_OBJECT : {
+			result = mProcessor.findObject(mVideoFrame->curFrame());
+			break;
+		}
+		case FIND_ISIM: {
+			result = mProcessor.findISIM(mVideoFrame->curFrame());
 			break;
 		}
 	}
 	this->mVideoFrame->setResult(result);
-	//qDebug() << time.elapsed();
-}
-
-// returns true if calibration finished
-bool MainWindow::calibrate(const cv::Mat& frame) {
-	static unsigned int trigger = 0, delay = 0;
-	const int MAX_TRIGGER = 100, MAX_DELAY = 30;
-	// initial delay for camera
-	if (delay < MAX_DELAY) {
-		++delay;
-		return false;
-	}
-	cv::Mat mask;
-	mSubtractor(frame, mask);
-	cv::erode(mask, mask, cv::Mat());
-	cv::dilate(mask, mask, cv::Mat());
-	// initial delay for subtractor
-	if (trigger < MAX_TRIGGER) {
-		trigger++;
-		return false;
-	}
-	// calibration
-	if (cv::countNonZero(mask) < 1) {
-		trigger = 0;
-		return true;
-	}
-	else return false;
-}
-
-cv::Mat MainWindow::findObject(const cv::Mat& frame) {
-	cv::Mat mask, result = frame;
-	mSubtractor(frame, mask, 0);
-	cv::erode(mask, mask, cv::Mat());
-	cv::dilate(mask, mask, cv::Mat());
-	cv::imshow("test", mask);
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Vec4i> hierarchy;
-	cv::findContours(mask, contours, hierarchy, CV_RETR_CCOMP, CV_CHAIN_APPROX_NONE);
-	for (int i = 0; i < contours.size(); ++i) {
-		if (contours[i].size() < 200 || hierarchy[i][3] != -1) continue;
-		//cv::Scalar color = cv::Scalar(rand() % 255, rand() % 255, rand() % 255);
-		//cv::drawContours(result, contours, i, color, 1, 8, hierarchy);
-		auto rect = cv::minAreaRect(contours[i]);
-		cv::Point2f rectPoints[4];
-		rect.points(rectPoints);
-		for (int j = 0; j < 4; ++j) {
-			cv::line(result,
-					 rectPoints[j],
-					 rectPoints[(j + 1) % 4],
-					 cv::Scalar(0, 0, 255),
-					 1,
-					 8);
-		}
-	}
-	return result;
+	qDebug() << elapsedTime.elapsed();
 }
 
 void MainWindow::serialCtrlBtnClicked(){
-	if (ui.serialCtrlBtn->text().operator == ("OPEN")){
+	static bool isOpen = false;
+	if (!isOpen){
+		mSerial.setPortName(ui.serialCombox->currentText());
 
-		serial->setPortName(ui.serialCombox->itemText(ui.serialCombox->currentIndex()));
-		serial->setBaudRate(115200);
-
-		if (serial->open(QIODevice::ReadWrite)){
+		if (mSerial.open(QIODevice::ReadWrite)){
 			ui.serialCtrlBtn->setText("CLOSE");
+			isOpen = true;
 		}
 		else{
-			QMessageBox serialErrorMessageBox;
-			serialErrorMessageBox.setText("Serialport cannnot open!");
-			serialErrorMessageBox.exec();
+			QMessageBox::critical(this, "Serial error", "Failed to open serial port!");
 		}
 	}
 	else{
-		serial->close();
+		mSerial.close();
 		ui.serialCtrlBtn->setText("OPEN");
+		isOpen = false;
 	}
 }
 
 void MainWindow::serialSendBtnClicked(){
-	if (serial->isOpen()){
+	if (mSerial.isOpen()){
 
 	}
 	else{
-		QMessageBox serialErrorMessageBox;
-		serialErrorMessageBox.setText("Serialport is not open!");
-		serialErrorMessageBox.exec();
+		QMessageBox::critical(this, "Serial Error", "Serialport is not open!");
 	}
 }
 
@@ -164,56 +109,50 @@ void MainWindow::payloadDetectionBtnClicked(){
 }
 
 void MainWindow::readData(){
-	
-	char *data;
-	if (serial->bytesAvailable() > 0){
-			data = new char[30];
-			serial->readLine(data, 30);
+	char data[30];
+	if (mSerial.bytesAvailable() > 0){
+		mSerial.readLine(data, 30);
 
-			QString strCmd(data);
-			cmdString->operator+=(strCmd);
+		QString strCmd(data);
+		*cmdString += strCmd;
 
-			if (cmdString->indexOf("\r\n") == -1){
-				return;
-			}
-			ui.serialConsole->append(strCmd);
-			strCmd.remove("\r\n");
-			if (strCmd.at(0) == '#'){
-				return;
-			}
-			QString cmd = strCmd.mid(0, 2);
-			QString cmdWithoutOpcode = strCmd.mid(2);
-			if ((cmdWithoutOpcode.at(0) > '9' || cmdWithoutOpcode.at(0) < '0')){
-				return;
-			}
+		if (cmdString->indexOf("\r\n") == -1){
+			return;
+		}
+		ui.serialConsole->append(strCmd);
+		strCmd.remove("\r\n");
+		if (strCmd.at(0) == '#'){
+			return;
+		}
+		QString cmd = strCmd.mid(0, 2);
+		QString cmdWithoutOpcode = strCmd.mid(2);
+		if ((cmdWithoutOpcode.at(0) > '9' || cmdWithoutOpcode.at(0) < '0')){
+			return;
+		}
 
-			QStringList *strParams = new QStringList();
-			*strParams = cmdWithoutOpcode.split('\t');
+		QStringList *strParams = new QStringList();
+		*strParams = cmdWithoutOpcode.split('\t');
 			
-			float *params = new float[cmdWithoutOpcode.size()];
-			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
-			{
-				params[i] = (*strParams)[i].toFloat();
-			}
+		float *params = new float[cmdWithoutOpcode.size()];
+		for (int i = 0; i < cmdWithoutOpcode.size(); i++)
+		{
+			params[i] = (*strParams)[i].toFloat();
+		}
 
-			if (cmd.operator==("PN"))
-			{
-				QMessageBox serialErrorMessageBox;
-				serialErrorMessageBox.setText("Ping recieved from ISIM");
-				serialErrorMessageBox.exec();
-			}
-			else if (cmd.operator==("GY")){
+		if (cmd == "PN")
+		{
+			QMessageBox serialErrorMessageBox;
+			serialErrorMessageBox.setText("Ping recieved from ISIM");
+			serialErrorMessageBox.exec();
+		}
 
-			}
-			else if (false){
+		if (cmd == "PN") {
+			QMessageBox::information(this, "Ping", "Ping recieved from ISIM!");
+		}
+		else if (cmd == "GY") {
 
-			}
-		
+		}
 	}
-	else{
-		return;
-	}
-
 }
 
 void MainWindow::pingBtnClicked(){
@@ -230,7 +169,7 @@ void MainWindow::isimHomeSelectionChanged(int selectionValue){
 }
 
 void MainWindow::isimControlValueChanged(){
-	if (serial->isOpen()){
+	if (mSerial.isOpen()){
 
 	}
 	else{
