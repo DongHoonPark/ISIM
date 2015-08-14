@@ -59,6 +59,7 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 	/*Send Data after checking port*/
 	if (xbee->isOpen()){
 		xbee->write(*instructionByteArray);
+		xbee->waitForBytesWritten(-1);
 	}
 	else{
 	}

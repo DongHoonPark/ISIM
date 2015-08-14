@@ -44,6 +44,7 @@ class MainWindow : public QMainWindow {
 		QSerialPort* serial;
 		IsimControl* isim[6] ;
 		IsimControl* isimCurrentControl;
+		QTimer* serialTheadTimer;
 
 	private slots:
 		void imageProcess();

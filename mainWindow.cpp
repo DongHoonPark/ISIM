@@ -30,7 +30,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 		ui.serialCombox->addItem(portInfoList->at(i).portName());
 	}
 	
-	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+	serialTheadTimer = new QTimer(this);
+
+	connect(serialTheadTimer, SIGNAL(timeout()), this, SLOT(readData()));
+	serialTheadTimer->start(5);
 	
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, serial);
@@ -39,6 +42,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 }
 
 MainWindow::~MainWindow() {
+	delete(&ui);
+	delete(serial);
+	delete(serialTheadTimer);
 }
 
 void MainWindow::imageProcess() {
@@ -162,11 +168,19 @@ void MainWindow::readData(){
 			serial->readLine(data, 30);
 
 			QString strCmd(data);
+			strCmd.remove("\r\n");
+			if (strCmd.at(0) == '#'){
+				return;
+			}
 			QString cmd = strCmd.mid(0, 2);
 			QString cmdWithoutOpcode = strCmd.mid(2);
+			if ((cmdWithoutOpcode.at(0) > '9' || cmdWithoutOpcode.at(0) < '0')){
+				return;
+			}
 
 			QStringList *strParams = new QStringList();
 			*strParams = cmdWithoutOpcode.split('\t');
+			
 			float *params = new float[cmdWithoutOpcode.size()];
 			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
 			{
