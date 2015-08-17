@@ -9,7 +9,7 @@ const int IMAGE_PROCESS_PERIOD = 33;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
-										  mCurState(CALIBRATION),
+										  mCurState(FIND_ISIM),
 										  mSerial(this),
 										  mProcessor(){
 	// basic parameter settings
@@ -19,23 +19,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 
 	mSerial.setBaudRate(115200);
-	// finding & adding ports
-	const auto& portInfoList = QSerialPortInfo::availablePorts();
-	if (portInfoList.size() == 0){
+	serial = new QSerialPort();
+	*portInfoList = QSerialPortInfo::availablePorts();
+	QList<QSerialPortInfo> *portInfoList = new QList<QSerialPortInfo>();
+	if (portInfoList->size() == 0){
 		ui.serialCombox->addItem("No port");
 	}
 	for (int i = 0; i < portInfoList.size(); ++i){
 		ui.serialCombox->addItem(portInfoList[i].portName());
 	}
-	/*
+	
 	connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
 	
-	for (int i = 0; i < 6; i++){
-		isim[i] = new IsimControl(i, serial);
+	for (int i = 0; i < 5; i++){
+		isim[i] = new IsimControl(i+1, serial);
 	}
-	*/
 	// this line should be last line of this constructor
 	mImageProcessTimer.start(IMAGE_PROCESS_PERIOD);
+	isimCurrentControl = isim[0];
 }
 
 MainWindow::~MainWindow() {
@@ -127,5 +128,25 @@ void MainWindow::readData(){
 }
 
 void MainWindow::pingBtnClicked(){
-	ui.controlIsimSelectCombox->currentText().mid(4, 1);
+	float pingNulldata[] = { 0, 0, 0 };
+	isimCurrentControl->sendInstruction(0, 0x05, pingNulldata);
+}
+
+void MainWindow::isimControlSelectionChanged(int selectionValue){
+	isimCurrentControl = isim[selectionValue];
+}
+
+void MainWindow::isimHomeSelectionChanged(int selectionValue){
+
+}
+
+void MainWindow::isimControlValueChanged(){
+	if (serial->isOpen()){
+
+	}
+	else{
+		QMessageBox serialErrorMessageBox;
+		serialErrorMessageBox.setText("Please open serialport first!");
+		serialErrorMessageBox.exec();
+	}
 }

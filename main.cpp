@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QElapsedTimer>
+#include <QstyleFactory>
 
 #include "mainWindow.h"
 
@@ -92,10 +93,11 @@ std::vector<cv::Point> findPath(const cv::Mat& image, const cv::Point& src, cons
 }
 
 int main(int argc, char *argv[]) {
-	//QApplication a(argc, argv);
-	//MainWindow w;
-	//w.show();
-	//return a.exec();
+	// QApplication a(argc, argv);
+	// a.setStyle(QStyleFactory::create("Fusion"));
+	// MainWindow w;
+	// w.show();
+	// return a.exec();
 	cv::Mat original = cv::imread("test.png", CV_LOAD_IMAGE_GRAYSCALE);
 	QElapsedTimer timer;
 	timer.start();
