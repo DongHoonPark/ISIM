@@ -64,6 +64,7 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 	/*Send Data after checking port*/
 	if (xbee->isOpen()){
 		xbee->write(*instructionByteArray);
+		xbee->waitForBytesWritten(-1);
 	}
 	else{
 
@@ -109,11 +110,28 @@ void IsimControl::setMagnetPower(float leftMagnet, float rightManget){
 	sendInstruction(0x02, 0x03, magnetPower);
 	return;
 }
-void IsimControl::updateGyroscopeData(){
 
+void IsimControl::setGyroscopeData(float* ypr){
+	this->yaw = ypr[0];
+	this->pitch = ypr[1];
+	this->roll = ypr[2];
+}
+
+void IsimControl::setYaw(float yaw){
+	this->yaw = yaw;
+}
+
+void IsimControl::updateGyroscopeData(){
+	float GYaddress = 1.0f;
+	sendInstruction(0x01, 0x06, &GYaddress);
+}
+void IsimControl::updateYaw(){
+	float GYaddress = 1.0f;
+	sendInstruction(0x01, 0x06, &GYaddress);
 }
 void IsimControl::updateSwitchPressed(){
-
+	float SWaddress = 2.0f;
+	sendInstruction(0x01, 0x06, &SWaddress);
 }
 
 int IsimControl::getId(){

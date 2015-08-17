@@ -6,6 +6,8 @@
 #include <QMessageBox>
 
 const int IMAGE_PROCESS_PERIOD = 33;
+const float MOTOR_SPEED_SACLER = 0.15f;
+const float DXL_ANGLE_SACLER = 3.4133333f;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
@@ -19,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 
 	cmdString = new QString();
-	mSerial.setBaudRate(38400);
+	mSerial.setBaudRate(57600);
 	// finding & adding ports
 	
 	const auto& portInfoList = QSerialPortInfo::availablePorts();
@@ -31,11 +33,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	}
 	
 	serialTheadTimer = new QTimer(this);
+	sensorUpdateTimer = new QTimer(this);
 
 	connect(serialTheadTimer, SIGNAL(timeout()), this, SLOT(readData()));
 	//connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
 	serialTheadTimer->start(1);
-	
+	connect(sensorUpdateTimer, SIGNAL(timeout()), this, SLOT(updateSensor()));
+	//sensorUpdateTimer->start(50);
+
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, &mSerial);
 	}
@@ -134,8 +139,9 @@ void MainWindow::readData(){
 			QStringList *strParams = new QStringList();
 			*strParams = cmdWithoutOpcode.split('\t');
 
+			int debug_int;
 			float *params = new float[cmdWithoutOpcode.size()];
-			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
+			for (int i = 0; i < strParams->size(); i++)
 			{
 				params[i] = (*strParams)[i].toFloat();
 			}
@@ -144,8 +150,17 @@ void MainWindow::readData(){
 				QMessageBox::information(this, "Ping", "Ping recieved from ISIM!");
 			}
 			else if (cmd == "GY") {
-
+				isim[((int)params[0]) - 1]->setYaw(params[1]);
 			}
+		}
+	}
+}
+
+void MainWindow::updateSensor(){
+	if (mSerial.isOpen()){
+		for (int i = 0; i < 5; i++){
+			isim[i]->updateGyroscopeData();
+			isim[i]->updateSwitchPressed();
 		}
 	}
 }
@@ -157,6 +172,12 @@ void MainWindow::pingBtnClicked(){
 
 void MainWindow::isimControlSelectionChanged(int selectionValue){
 	isimCurrentControl = isim[selectionValue];
+	ui.rmotorSpinbox->setValue(isimCurrentControl->getRmotorValue() / MOTOR_SPEED_SACLER);
+	ui.lmotorSpinbox->setValue(isimCurrentControl->getLmotorValue() / MOTOR_SPEED_SACLER);
+	ui.rdxlSpinbox->setValue((isimCurrentControl->getRdxlValue() - 512.0f) / DXL_ANGLE_SACLER);
+	ui.ldxlSpinbox->setValue((isimCurrentControl->getLdxlValue() - 512.0f) / DXL_ANGLE_SACLER);
+	ui.rmagnetSpinbox->setValue(isimCurrentControl->getRmagnetValue());
+	ui.lmagnetSpinbox->setValue(isimCurrentControl->getLmagnetValue());
 }
 
 void MainWindow::isimHomeSelectionChanged(int selectionValue){
@@ -179,10 +200,10 @@ void MainWindow::isimControlValueChanged(){
 		switch (senderNames.indexOf( obj->objectName() ))
 		{
 		case 0:// right motor value changed
-			isimCurrentControl->setWheelSpeed(isimCurrentControl->getLmotorValue(),0.05f*((QSpinBox*)obj)->value());
+			isimCurrentControl->setWheelSpeed(isimCurrentControl->getLmotorValue(),MOTOR_SPEED_SACLER*((QSpinBox*)obj)->value());
 			break;
 		case 1:// left motor value changed
-			isimCurrentControl->setWheelSpeed(0.05f*((QSpinBox*)obj)->value(), isimCurrentControl->getRmotorValue());
+			isimCurrentControl->setWheelSpeed(MOTOR_SPEED_SACLER*((QSpinBox*)obj)->value(), isimCurrentControl->getRmotorValue());
 			break;
 		case 2:// right dxl value changed
 			isimCurrentControl->setDxlPosition(isimCurrentControl->getLdxlValue(), ((QSpinBox*)obj)->value() * 3.4133333f + 512.0f);

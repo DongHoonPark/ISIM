@@ -12,7 +12,10 @@ public :
 	void setWheelSpeed(float leftSpeed, float rightSpeed);
 	void setDxlPosition(float leftAngle, float rightAngle);
 	void setMagnetPower(float leftMagnet, float rightManget);
-	
+	void setGyroscopeData(float* ypr);
+	void setYaw(float yaw);
+
+	void updateYaw();
 	void updateGyroscopeData();
 	void updateSwitchPressed();
 

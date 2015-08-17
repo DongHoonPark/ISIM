@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow {
 		void isimControlValueChanged();
 		void assemblePathGenBtnClicked();
 		void readData();
+		void updateSensor();
 		void ldxlInfoChanged(int);
 
 	private:
@@ -49,6 +50,7 @@ class MainWindow : public QMainWindow {
 		IsimControl* isim[5] ;
 		IsimControl* isimCurrentControl;
 		QTimer* serialTheadTimer;
+		QTimer* sensorUpdateTimer;
 		QString* cmdString;
 		QSerialPort mSerial;
 
