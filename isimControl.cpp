@@ -20,7 +20,7 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 	int instIndex = 0;
 	/*Insert Start Index*/
 	for (int i = 0; i < 3; i++){
-		instructionByteArray->insert(instIndex++, 0xFF);
+		instructionByteArray->insert(instIndex++, 0x55);
 	}
 	/*Insert ID, Length, Instruction*/
 	instructionByteArray->insert(instIndex++,(char)(this->id) );
@@ -39,29 +39,34 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 			params[i] = 0 - params[i];
 		}
 
-		qint16 *param_H ;
-		qint16 *param_L ;
+
+		qint16 param_H ;
+		qint16 param_L ;
 		
-		*param_H = ((int)(params[i])) % 10000;
-		*param_L = ((int)(params[i] * 1000.0)) % 10000;
+		param_H = (qint16)(((int)(params[i])) % 10000);
+		param_L = (qint16)(((int)(params[i] * 10000.0)) % 10000);
 
 		if (isPostive){
 		}
 		else{
-			*param_H = -(*param_H);
-			*param_L = -(*param_L);
+			param_H = -(param_H);
+			param_L = -(param_L);
 		}
 
+		instructionByteArray->insert(instIndex++, ((char*)&param_H) , 2);
+		instIndex++;
 
+		instructionByteArray->insert(instIndex++, ((char*)&param_L) , 2);
+		instIndex++;
 	}
 	/*Insert CheckSum*/
 	instructionByteArray->insert(instIndex++,0xFE);
 	/*Send Data after checking port*/
 	if (xbee->isOpen()){
 		xbee->write(*instructionByteArray);
-		xbee->waitForBytesWritten(-1);
 	}
 	else{
+
 	}
 	delete(instructionByteArray);
 }
@@ -72,6 +77,9 @@ void IsimControl::setWheelSpeed(float leftSpeed, float rightSpeed){
 	wheelSpeed[0] = leftSpeed;
 	wheelSpeed[1] = rightSpeed;
 	
+	this->lmotorValue = leftSpeed;
+	this->rmotorValue = rightSpeed;
+
 	sendInstruction(0x02, 0x01, wheelSpeed);
 	return;
 }
@@ -82,6 +90,9 @@ void IsimControl::setDxlPosition(float leftAngle, float rightAngle){
 	dxlPosition[0] = leftAngle;
 	dxlPosition[1] = rightAngle;
 
+	this->ldxlValue = leftAngle;
+	this->rdxlValue = rightAngle;
+
 	sendInstruction(0x02, 0x04, dxlPosition);
 	return;
 }
@@ -91,6 +102,9 @@ void IsimControl::setMagnetPower(float leftMagnet, float rightManget){
 	
 	magnetPower[0] = leftMagnet;
 	magnetPower[1] = rightManget;
+
+	this->lmagnetValue = leftMagnet;
+	this->rmagnetValue = rightManget;
 
 	sendInstruction(0x02, 0x03, magnetPower);
 	return;
@@ -116,4 +130,22 @@ float IsimControl::getPitch(){
 }
 bool  IsimControl::getSwitchPressed(){
 	return this->switchPressed;
+}
+float IsimControl::getRmotorValue(){
+	return this->rmotorValue;
+}
+float IsimControl::getLmotorValue(){
+	return this->lmotorValue;
+}
+float IsimControl::getRdxlValue(){
+	return this->rdxlValue;
+}
+float IsimControl::getLdxlValue(){
+	return this->ldxlValue;
+}
+float IsimControl::getRmagnetValue(){
+	return this->rmagnetValue;
+}
+float IsimControl::getLmagnetValue(){
+	return this->lmagnetValue;
 }

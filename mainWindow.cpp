@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 
 	cmdString = new QString();
-	mSerial.setBaudRate(115200);
+	mSerial.setBaudRate(38400);
 	// finding & adding ports
 	
 	const auto& portInfoList = QSerialPortInfo::availablePorts();
@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	serialTheadTimer = new QTimer(this);
 
 	connect(serialTheadTimer, SIGNAL(timeout()), this, SLOT(readData()));
-	connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
-	//serialTheadTimer->start(5);
+	//connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
+	serialTheadTimer->start(1);
 	
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, &mSerial);
@@ -111,46 +111,41 @@ void MainWindow::payloadDetectionBtnClicked(){
 void MainWindow::readData(){
 	char data[30];
 	if (mSerial.bytesAvailable() > 0){
-		mSerial.readLine(data, 30);
+		if (mSerial.canReadLine()){
+			mSerial.readLine(data, 30);
 
-		QString strCmd(data);
-		*cmdString += strCmd;
+			QString strCmd(data);
+			*cmdString += strCmd;
 
-		if (cmdString->indexOf("\r\n") == -1){
-			return;
-		}
-		ui.serialConsole->append(strCmd);
-		strCmd.remove("\r\n");
-		if (strCmd.at(0) == '#'){
-			return;
-		}
-		QString cmd = strCmd.mid(0, 2);
-		QString cmdWithoutOpcode = strCmd.mid(2);
-		if ((cmdWithoutOpcode.at(0) > '9' || cmdWithoutOpcode.at(0) < '0')){
-			return;
-		}
+			if (cmdString->indexOf("\r\n") == -1){
+				return;
+			}
+			ui.serialConsole->append(strCmd);
+			strCmd.remove("\r\n");
+			if (strCmd.at(0) == '#'){
+				return;
+			}
+			QString cmd = strCmd.mid(0, 2);
+			QString cmdWithoutOpcode = strCmd.mid(2);
+			if ((cmdWithoutOpcode.at(0) > '9' || cmdWithoutOpcode.at(0) < '0')){
+				return;
+			}
 
-		QStringList *strParams = new QStringList();
-		*strParams = cmdWithoutOpcode.split('\t');
-			
-		float *params = new float[cmdWithoutOpcode.size()];
-		for (int i = 0; i < cmdWithoutOpcode.size(); i++)
-		{
-			params[i] = (*strParams)[i].toFloat();
-		}
+			QStringList *strParams = new QStringList();
+			*strParams = cmdWithoutOpcode.split('\t');
 
-		if (cmd == "PN")
-		{
-			QMessageBox serialErrorMessageBox;
-			serialErrorMessageBox.setText("Ping recieved from ISIM");
-			serialErrorMessageBox.exec();
-		}
+			float *params = new float[cmdWithoutOpcode.size()];
+			for (int i = 0; i < cmdWithoutOpcode.size(); i++)
+			{
+				params[i] = (*strParams)[i].toFloat();
+			}
 
-		if (cmd == "PN") {
-			QMessageBox::information(this, "Ping", "Ping recieved from ISIM!");
-		}
-		else if (cmd == "GY") {
+			if (cmd == "PN") {
+				QMessageBox::information(this, "Ping", "Ping recieved from ISIM!");
+			}
+			else if (cmd == "GY") {
 
+			}
 		}
 	}
 }
@@ -169,8 +164,39 @@ void MainWindow::isimHomeSelectionChanged(int selectionValue){
 }
 
 void MainWindow::isimControlValueChanged(){
+	
 	if (mSerial.isOpen()){
 
+		QStringList senderNames;
+		senderNames << "rmotorSpinbox"; //0
+		senderNames << "lmotorSpinbox"; //1
+		senderNames << "rdxlSpinbox";   //2
+		senderNames << "ldxlSpinbox";   //3
+		senderNames << "rmagnetSpinbox";//4
+		senderNames << "lmagnetSpinbox";//5
+
+		QObject* obj = sender();
+		switch (senderNames.indexOf( obj->objectName() ))
+		{
+		case 0:// right motor value changed
+			isimCurrentControl->setWheelSpeed(isimCurrentControl->getLmotorValue(),0.05f*((QSpinBox*)obj)->value());
+			break;
+		case 1:// left motor value changed
+			isimCurrentControl->setWheelSpeed(0.05f*((QSpinBox*)obj)->value(), isimCurrentControl->getRmotorValue());
+			break;
+		case 2:// right dxl value changed
+			isimCurrentControl->setDxlPosition(isimCurrentControl->getLdxlValue(), ((QSpinBox*)obj)->value() * 3.4133333f + 512.0f);
+			break;
+		case 3:// left dxl value changed
+			isimCurrentControl->setDxlPosition(((QSpinBox*)obj)->value() * 3.4133333f + 512.0f, isimCurrentControl->getRdxlValue());
+			break;
+		case 4:// right magnet value changed
+			isimCurrentControl->setMagnetPower(isimCurrentControl->getLmagnetValue(), ((QSpinBox*)obj)->value());
+			break;
+		case 5:// left magnet value changed
+			isimCurrentControl->setMagnetPower(((QSpinBox*)obj)->value() , isimCurrentControl->getRmagnetValue());
+			break;
+		}
 	}
 	else{
 		QMessageBox serialErrorMessageBox;

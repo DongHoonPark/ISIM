@@ -21,6 +21,14 @@ public :
 	float getRoll();
 	float getPitch();
 	bool  getSwitchPressed();
+	
+	float getRmotorValue();
+	float getLmotorValue();
+	float getRdxlValue();
+	float getLdxlValue();
+	float getRmagnetValue();
+	float getLmagnetValue();
+
 
 private:
 	QSerialPort* xbee;
