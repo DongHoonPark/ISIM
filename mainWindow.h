@@ -4,6 +4,7 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
+#include <QKeyEvent>
 #include "ui_ISIM.h"
 
 #include "videoFrame.h"
@@ -27,6 +28,7 @@ class MainWindow : public QMainWindow {
 	public:
 		MainWindow(QWidget *parent = 0);
 		~MainWindow();
+		void keyPressEvent(QKeyEvent* e);
 
 	public slots:
 		void serialCtrlBtnClicked();
@@ -39,6 +41,7 @@ class MainWindow : public QMainWindow {
 		void assemblePathGenBtnClicked();
 		void readData();
 		void updateSensor();
+		void gyroReadBtnClicked();
 		void ldxlInfoChanged(int);
 
 	private:

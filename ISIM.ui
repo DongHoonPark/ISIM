@@ -209,7 +209,7 @@
      <rect>
       <x>880</x>
       <y>130</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
@@ -479,6 +479,19 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="gyroBtn">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>130</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>GYRO</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
@@ -548,7 +561,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>921</x>
-     <y>165</y>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
      <x>985</x>
@@ -563,12 +576,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1004</x>
-     <y>237</y>
+     <x>1005</x>
+     <y>218</y>
     </hint>
     <hint type="destinationlabel">
      <x>960</x>
-     <y>240</y>
+     <y>222</y>
     </hint>
    </hints>
   </connection>
@@ -579,12 +592,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>959</x>
-     <y>232</y>
+     <x>960</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
-     <x>975</x>
-     <y>228</y>
+     <x>976</x>
+     <y>218</y>
     </hint>
    </hints>
   </connection>
@@ -595,12 +608,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>940</x>
-     <y>202</y>
+     <x>941</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
-     <x>984</x>
-     <y>200</y>
+     <x>985</x>
+     <y>186</y>
     </hint>
    </hints>
   </connection>
@@ -611,12 +624,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>986</x>
-     <y>200</y>
+     <x>987</x>
+     <y>186</y>
     </hint>
     <hint type="destinationlabel">
-     <x>958</x>
-     <y>202</y>
+     <x>959</x>
+     <y>190</y>
     </hint>
    </hints>
   </connection>
@@ -627,12 +640,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>928</x>
-     <y>299</y>
+     <x>929</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
-     <x>993</x>
-     <y>292</y>
+     <x>994</x>
+     <y>282</y>
     </hint>
    </hints>
   </connection>
@@ -643,12 +656,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>987</x>
-     <y>289</y>
+     <x>988</x>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
-     <x>943</x>
-     <y>294</y>
+     <x>944</x>
+     <y>286</y>
     </hint>
    </hints>
   </connection>
@@ -660,11 +673,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>960</x>
-     <y>258</y>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
-     <x>979</x>
-     <y>267</y>
+     <x>980</x>
+     <y>250</y>
     </hint>
    </hints>
   </connection>
@@ -675,12 +688,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>985</x>
-     <y>262</y>
+     <x>986</x>
+     <y>250</y>
     </hint>
     <hint type="destinationlabel">
-     <x>951</x>
-     <y>261</y>
+     <x>952</x>
+     <y>254</y>
     </hint>
    </hints>
   </connection>
@@ -691,12 +704,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>946</x>
-     <y>366</y>
+     <x>947</x>
+     <y>350</y>
     </hint>
     <hint type="destinationlabel">
-     <x>989</x>
-     <y>354</y>
+     <x>990</x>
+     <y>346</y>
     </hint>
    </hints>
   </connection>
@@ -707,12 +720,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1000</x>
-     <y>351</y>
+     <x>1001</x>
+     <y>346</y>
     </hint>
     <hint type="destinationlabel">
-     <x>950</x>
-     <y>359</y>
+     <x>951</x>
+     <y>350</y>
     </hint>
    </hints>
   </connection>
@@ -723,12 +736,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>957</x>
-     <y>328</y>
+     <x>958</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
-     <x>974</x>
-     <y>327</y>
+     <x>975</x>
+     <y>314</y>
     </hint>
    </hints>
   </connection>
@@ -739,12 +752,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>993</x>
-     <y>319</y>
+     <x>994</x>
+     <y>314</y>
     </hint>
     <hint type="destinationlabel">
      <x>960</x>
-     <y>330</y>
+     <y>318</y>
     </hint>
    </hints>
   </connection>
@@ -803,8 +816,8 @@
    <slot>ldxlInfoChanged(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>871</x>
-     <y>243</y>
+     <x>872</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>764</x>
@@ -819,8 +832,8 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>902</x>
-     <y>199</y>
+     <x>903</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>788</x>
@@ -835,8 +848,8 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>901</x>
-     <y>233</y>
+     <x>902</x>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>790</x>
@@ -851,8 +864,8 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>883</x>
-     <y>268</y>
+     <x>884</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>769</x>
@@ -867,8 +880,8 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>886</x>
-     <y>300</y>
+     <x>887</x>
+     <y>286</y>
     </hint>
     <hint type="destinationlabel">
      <x>744</x>
@@ -883,8 +896,8 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>912</x>
-     <y>327</y>
+     <x>913</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>752</x>
@@ -899,12 +912,28 @@
    <slot>isimControlValueChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>885</x>
-     <y>362</y>
+     <x>886</x>
+     <y>350</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
      <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gyroBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>gyroReadBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1031</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1076</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -924,5 +953,6 @@
   <slot>lmagnetInfoChanged(int)</slot>
   <slot>rmagnetInfoChanged(int)</slot>
   <slot>isimControlValueChanged()</slot>
+  <slot>gyroReadBtnClicked()</slot>
  </slots>
 </ui>

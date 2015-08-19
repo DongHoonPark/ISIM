@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(&mImageProcessTimer, SIGNAL(timeout()), this, SLOT(imageProcess()));
 
 	cmdString = new QString();
-	mSerial.setBaudRate(57600);
+	mSerial.setBaudRate(38400);
 	// finding & adding ports
 	
 	const auto& portInfoList = QSerialPortInfo::availablePorts();
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	//connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
 	serialTheadTimer->start(1);
 	connect(sensorUpdateTimer, SIGNAL(timeout()), this, SLOT(updateSensor()));
-	//sensorUpdateTimer->start(50);
+	//sensorUpdateTimer->start(1000);
 
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, &mSerial);
@@ -114,18 +114,15 @@ void MainWindow::payloadDetectionBtnClicked(){
 }
 
 void MainWindow::readData(){
-	char data[30];
-	if (mSerial.bytesAvailable() > 0){
 		if (mSerial.canReadLine()){
+			char data[30];
 			mSerial.readLine(data, 30);
 
 			QString strCmd(data);
 			*cmdString += strCmd;
 
-			if (cmdString->indexOf("\r\n") == -1){
-				return;
-			}
 			ui.serialConsole->append(strCmd);
+			
 			strCmd.remove("\r\n");
 			if (strCmd.at(0) == '#'){
 				return;
@@ -153,14 +150,13 @@ void MainWindow::readData(){
 				isim[((int)params[0]) - 1]->setYaw(params[1]);
 			}
 		}
-	}
+	
 }
 
 void MainWindow::updateSensor(){
 	if (mSerial.isOpen()){
 		for (int i = 0; i < 5; i++){
 			isim[i]->updateGyroscopeData();
-			isim[i]->updateSwitchPressed();
 		}
 	}
 }
@@ -230,4 +226,15 @@ void MainWindow::ldxlInfoChanged(int){
 }
 void MainWindow::assemblePathGenBtnClicked(){
 
+}
+void MainWindow::keyPressEvent(QKeyEvent* e){
+	/*
+	QMessageBox* box = new QMessageBox();
+	box->setWindowTitle(QString("Hello"));
+	box->setText(QString("You Pressed: ") + e->text());
+	box->show();
+	*/
+}
+void MainWindow::gyroReadBtnClicked(){
+	isimCurrentControl->updateYaw();
 }
