@@ -4,6 +4,8 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
+#include <QKeyEvent>
+#include <QThread>
 #include "ui_ISIM.h"
 
 #include "videoFrame.h"
@@ -27,6 +29,7 @@ class MainWindow : public QMainWindow {
 	public:
 		MainWindow(QWidget *parent = 0);
 		~MainWindow();
+		void keyPressEvent(QKeyEvent* e);
 
 	public slots:
 		void serialCtrlBtnClicked();
@@ -36,7 +39,11 @@ class MainWindow : public QMainWindow {
 		void isimControlSelectionChanged(int);
 		void isimHomeSelectionChanged(int);
 		void isimControlValueChanged();
+		void assemblePathGenBtnClicked();
 		void readData();
+		void updateSensor();
+		void gyroReadBtnClicked();
+		void ldxlInfoChanged(int);
 
 	private:
 		Ui::MainWindow ui;
@@ -44,9 +51,12 @@ class MainWindow : public QMainWindow {
 		ImageProcessor mProcessor;
 		QTimer mImageProcessTimer;
 		MainWindow::State mCurState;
-		QSerialPort mSerial;
-		IsimControl** mIsim;
+		IsimControl* isim[5] ;
 		IsimControl* isimCurrentControl;
+		QTimer* serialTheadTimer;
+		QTimer* sensorUpdateTimer;
+		QString* cmdString;
+		QSerialPort mSerial;
 	private slots:
 		void imageProcess();
 };

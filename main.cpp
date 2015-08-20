@@ -93,25 +93,25 @@ std::vector<cv::Point> findPath(const cv::Mat& image, const cv::Point& src, cons
 }
 
 int main(int argc, char *argv[]) {
-	// QApplication a(argc, argv);
-	// a.setStyle(QStyleFactory::create("Fusion"));
-	// MainWindow w;
-	// w.show();
-	// return a.exec();
-	cv::Mat original = cv::imread("test.png", CV_LOAD_IMAGE_GRAYSCALE);
-	QElapsedTimer timer;
-	timer.start();
-	auto path = findPath(original,
-						 cv::Point(0, 0),
-						 cv::Point(original.size().width - 1, original.size().height - 1),
-						 3);
-	qDebug() << timer.elapsed();
-	cv::cvtColor(original, original, CV_GRAY2BGR);
-	for (int i = 1; i < path.size(); ++i) {
-		cv::line(original, path[i - 1], path[i], cv::Scalar(0, 0, 255), 2);
-	}
-	cv::namedWindow("test");
-	cv::imshow("test", original);
-	cv::imwrite("result.png", original);
-	cv::waitKey();
+	 QApplication a(argc, argv);
+	 a.setStyle(QStyleFactory::create("Fusion"));
+	 MainWindow w;
+	 w.show();
+	 return a.exec();
+	//cv::Mat original = cv::imread("test.png", CV_LOAD_IMAGE_GRAYSCALE);
+	//QElapsedTimer timer;
+	//timer.start();
+	//auto path = findPath(original,
+	//					 cv::Point(0, 0),
+	//					 cv::Point(original.size().width - 1, original.size().height - 1),
+	//					 3);
+	//qDebug() << timer.elapsed();
+	//cv::cvtColor(original, original, CV_GRAY2BGR);
+	//for (int i = 1; i < path.size(); ++i) {
+	//	cv::line(original, path[i - 1], path[i], cv::Scalar(0, 0, 255), 2);
+	//}
+	//cv::namedWindow("test");
+	//cv::imshow("test", original);
+	//cv::imwrite("result.png", original);
+	//cv::waitKey();
 }

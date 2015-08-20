@@ -12,7 +12,10 @@ public :
 	void setWheelSpeed(float leftSpeed, float rightSpeed);
 	void setDxlPosition(float leftAngle, float rightAngle);
 	void setMagnetPower(float leftMagnet, float rightManget);
-	
+	void setGyroscopeData(float* ypr);
+	void setYaw(float yaw);
+
+	void updateYaw();
 	void updateGyroscopeData();
 	void updateSwitchPressed();
 
@@ -21,6 +24,14 @@ public :
 	float getRoll();
 	float getPitch();
 	bool  getSwitchPressed();
+	
+	float getRmotorValue();
+	float getLmotorValue();
+	float getRdxlValue();
+	float getLdxlValue();
+	float getRmagnetValue();
+	float getLmagnetValue();
+
 
 private:
 	QSerialPort* xbee;
@@ -29,5 +40,11 @@ private:
 	float roll;
 	float pitch;
 	bool switchPressed;
+	float rmotorValue;
+	float lmotorValue;
+	float rmagnetValue;
+	float lmagnetValue;
+	float rdxlValue;
+	float ldxlValue;
 	
 };

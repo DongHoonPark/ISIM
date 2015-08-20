@@ -32,8 +32,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1280</width>
-      <height>720</height>
+      <width>720</width>
+      <height>480</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -144,29 +144,6 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>810</x>
-      <y>220</y>
-      <width>441</width>
-      <height>191</height>
-     </rect>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Tab 1</string>
-     </attribute>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Tab 2</string>
-     </attribute>
-    </widget>
-   </widget>
    <widget class="QComboBox" name="controlIsimSelectCombox">
     <property name="geometry">
      <rect>
@@ -232,12 +209,287 @@
      <rect>
       <x>880</x>
       <y>130</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>PING</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>160</y>
+      <width>71</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>5</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Rmotor</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Lmotor</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Rdxl</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Ldxl</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Rmagnet</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Lmagnet</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>160</y>
+      <width>101</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>10</number>
+     </property>
+     <item>
+      <widget class="QSpinBox" name="rmotorSpinbox">
+       <property name="minimum">
+        <number>-99</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="lmotorSpinbox">
+       <property name="minimum">
+        <number>-99</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="rdxlSpinbox">
+       <property name="minimum">
+        <number>-90</number>
+       </property>
+       <property name="maximum">
+        <number>90</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="ldxlSpinbox">
+       <property name="minimum">
+        <number>-90</number>
+       </property>
+       <property name="maximum">
+        <number>90</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="rmagnetSpinbox">
+       <property name="minimum">
+        <number>-255</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="lmagnetSpinbox">
+       <property name="minimum">
+        <number>-255</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>160</y>
+      <width>291</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QScrollBar" name="rmotorValueScrollbar">
+       <property name="minimum">
+        <number>-99</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="lmotorValueScrollbar">
+       <property name="minimum">
+        <number>-99</number>
+       </property>
+       <property name="maximum">
+        <number>99</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="rdxlValueScrollbar">
+       <property name="minimum">
+        <number>-90</number>
+       </property>
+       <property name="maximum">
+        <number>90</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="ldxlValueScrollbar">
+       <property name="minimum">
+        <number>-90</number>
+       </property>
+       <property name="maximum">
+        <number>90</number>
+       </property>
+       <property name="value">
+        <number>0</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="rmagnetValueScrollbar">
+       <property name="minimum">
+        <number>-255</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QScrollBar" name="lmagnetValueScrollbar">
+       <property name="minimum">
+        <number>-255</number>
+       </property>
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QTextEdit" name="serialConsole">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>380</y>
+      <width>461</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="gyroBtn">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>130</y>
+      <width>75</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>GYRO</string>
     </property>
    </widget>
   </widget>
@@ -309,11 +561,379 @@
    <hints>
     <hint type="sourcelabel">
      <x>921</x>
-     <y>165</y>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
      <x>985</x>
      <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmotorValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lmotorSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1005</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>960</x>
+     <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmotorSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lmotorValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>960</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>976</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmotorSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rmotorValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>941</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>985</x>
+     <y>186</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmotorValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rmotorSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>987</x>
+     <y>186</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>959</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ldxlSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ldxlValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>929</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>994</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ldxlValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ldxlSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>988</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>944</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdxlSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rdxlValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>960</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>980</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdxlValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rdxlSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>986</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>952</x>
+     <y>254</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmagnetSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lmagnetValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>947</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>990</x>
+     <y>346</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmagnetValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lmagnetSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1001</x>
+     <y>346</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>951</x>
+     <y>350</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmagnetSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rmagnetValueScrollbar</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>958</x>
+     <y>318</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>975</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmagnetValueScrollbar</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>rmagnetSpinbox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>994</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>960</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>assemblePathGenerationBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>assemblePathGenBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1086</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1156</x>
+     <y>159</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>controlIsimSelectCombox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlSelectionChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>851</x>
+     <y>129</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>841</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>destinationHomeSelectCombox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimHomeSelectionChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>903</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>824</x>
+     <y>170</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmotorSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>ldxlInfoChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>872</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>764</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmotorSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>903</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>788</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmotorSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>902</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>790</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rdxlSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>884</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>769</x>
+     <y>265</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ldxlSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>887</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>744</x>
+     <y>293</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rmagnetSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>913</x>
+     <y>318</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>752</x>
+     <y>325</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lmagnetSpinbox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>isimControlValueChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>886</x>
+     <y>350</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>362</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>gyroBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>gyroReadBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1031</x>
+     <y>146</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1076</x>
+     <y>137</y>
     </hint>
    </hints>
   </connection>
@@ -323,5 +943,16 @@
   <slot>serialSendBtnClicked()</slot>
   <slot>payloadDetectionBtnClicked()</slot>
   <slot>pingBtnClicked()</slot>
+  <slot>assemblePathGenBtnClicked()</slot>
+  <slot>isimControlSelectionChanged(int)</slot>
+  <slot>isimHomeSelectionChanged(int)</slot>
+  <slot>lmotorInfoChanged(int)</slot>
+  <slot>rmotorInfoChanged(int)</slot>
+  <slot>ldxlInfoChanged(int)</slot>
+  <slot>rdxlInfoChanged(int)</slot>
+  <slot>lmagnetInfoChanged(int)</slot>
+  <slot>rmagnetInfoChanged(int)</slot>
+  <slot>isimControlValueChanged()</slot>
+  <slot>gyroReadBtnClicked()</slot>
  </slots>
 </ui>

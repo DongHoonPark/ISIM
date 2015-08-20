@@ -3,6 +3,12 @@
 IsimControl::IsimControl(int id, QSerialPort* xbee){
 	this->id = id;
 	this->xbee = xbee;
+	this->ldxlValue = 512;
+	this->rdxlValue = 512;
+	this->lmagnetValue = 0;
+	this->rmagnetValue = 0;
+	this->lmotorValue = 0;
+	this->rmotorValue = 0;
 }
 
 IsimControl::~IsimControl(){
@@ -11,16 +17,15 @@ IsimControl::~IsimControl(){
 
 void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* params){
 	QByteArray* instructionByteArray = new QByteArray();
-	instructionByteArray->resize(3 + 1 + 1 + 1 + 4*length + 1);
+	int instIndex = 0;
 	/*Insert Start Index*/
-	for (int i = 0; i < 3; i++)
-	{
-		instructionByteArray->append(0xFF);
+	for (int i = 0; i < 3; i++){
+		instructionByteArray->insert(instIndex++, 0x55);
 	}
 	/*Insert ID, Length, Instruction*/
-	instructionByteArray->append((char)(this->id));
-	instructionByteArray->append(length);
-	instructionByteArray->append(instruction);
+	instructionByteArray->insert(instIndex++,(char)(this->id) );
+	instructionByteArray->insert(instIndex++, length);
+	instructionByteArray->insert(instIndex++, instruction);
 	/*Insert Data*/
 	for (int i = 0; i < length; i++)
 	{
@@ -34,26 +39,35 @@ void IsimControl::sendInstruction(quint8 length, quint8 instruction, float* para
 			params[i] = 0 - params[i];
 		}
 
-		qint16 *param_H ;
-		qint16 *param_L ;
+
+		qint16 param_H ;
+		qint16 param_L ;
 		
-		*param_H = ((int)(params[i])) % 10000;
-		*param_L = ((int)(params[i] * 1000.0)) % 10000;
+		param_H = (qint16)(((int)(params[i])) % 10000);
+		param_L = (qint16)(((int)(params[i] * 10000.0)) % 10000);
 
 		if (isPostive){
 		}
 		else{
-			*param_H = -(*param_H);
-			*param_L = -(*param_L);
+			param_H = -(param_H);
+			param_L = -(param_L);
 		}
+
+		instructionByteArray->insert(instIndex++, ((char*)&param_H) , 2);
+		instIndex++;
+
+		instructionByteArray->insert(instIndex++, ((char*)&param_L) , 2);
+		instIndex++;
 	}
 	/*Insert CheckSum*/
-	instructionByteArray->append(0xFE);
+	instructionByteArray->insert(instIndex++,0xFE);
 	/*Send Data after checking port*/
 	if (xbee->isOpen()){
 		xbee->write(*instructionByteArray);
+		xbee->waitForBytesWritten(-1);
 	}
 	else{
+
 	}
 	delete(instructionByteArray);
 }
@@ -64,6 +78,9 @@ void IsimControl::setWheelSpeed(float leftSpeed, float rightSpeed){
 	wheelSpeed[0] = leftSpeed;
 	wheelSpeed[1] = rightSpeed;
 	
+	this->lmotorValue = leftSpeed;
+	this->rmotorValue = rightSpeed;
+
 	sendInstruction(0x02, 0x01, wheelSpeed);
 	return;
 }
@@ -73,6 +90,9 @@ void IsimControl::setDxlPosition(float leftAngle, float rightAngle){
 
 	dxlPosition[0] = leftAngle;
 	dxlPosition[1] = rightAngle;
+
+	this->ldxlValue = leftAngle;
+	this->rdxlValue = rightAngle;
 
 	sendInstruction(0x02, 0x04, dxlPosition);
 	return;
@@ -84,14 +104,34 @@ void IsimControl::setMagnetPower(float leftMagnet, float rightManget){
 	magnetPower[0] = leftMagnet;
 	magnetPower[1] = rightManget;
 
+	this->lmagnetValue = leftMagnet;
+	this->rmagnetValue = rightManget;
+
 	sendInstruction(0x02, 0x03, magnetPower);
 	return;
 }
-void IsimControl::updateGyroscopeData(){
 
+void IsimControl::setGyroscopeData(float* ypr){
+	this->yaw = ypr[0];
+	this->pitch = ypr[1];
+	this->roll = ypr[2];
+}
+
+void IsimControl::setYaw(float yaw){
+	this->yaw = yaw;
+}
+
+void IsimControl::updateGyroscopeData(){
+	float GYaddress = 1.0f;
+	sendInstruction(0x01, 0x06, &GYaddress);
+}
+void IsimControl::updateYaw(){
+	float GYaddress = 1.0f;
+	sendInstruction(0x01, 0x06, &GYaddress);
 }
 void IsimControl::updateSwitchPressed(){
-
+	float SWaddress = 2.0f;
+	sendInstruction(0x01, 0x06, &SWaddress);
 }
 
 int IsimControl::getId(){
@@ -108,4 +148,22 @@ float IsimControl::getPitch(){
 }
 bool  IsimControl::getSwitchPressed(){
 	return this->switchPressed;
+}
+float IsimControl::getRmotorValue(){
+	return this->rmotorValue;
+}
+float IsimControl::getLmotorValue(){
+	return this->lmotorValue;
+}
+float IsimControl::getRdxlValue(){
+	return this->rdxlValue;
+}
+float IsimControl::getLdxlValue(){
+	return this->ldxlValue;
+}
+float IsimControl::getRmagnetValue(){
+	return this->rmagnetValue;
+}
+float IsimControl::getLmagnetValue(){
+	return this->lmagnetValue;
 }
