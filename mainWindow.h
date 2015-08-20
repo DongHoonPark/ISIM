@@ -5,6 +5,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QTimer>
 #include <QKeyEvent>
+#include <QThread>
 #include "ui_ISIM.h"
 
 #include "videoFrame.h"

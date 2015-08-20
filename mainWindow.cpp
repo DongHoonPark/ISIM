@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	//connect(&mSerial, SIGNAL(readyRead()), this, SLOT(readData()));
 	serialTheadTimer->start(1);
 	connect(sensorUpdateTimer, SIGNAL(timeout()), this, SLOT(updateSensor()));
-	//sensorUpdateTimer->start(1000);
+	//sensorUpdateTimer->start(300);
 
 	for (int i = 0; i < 5; i++){
 		isim[i] = new IsimControl(i+1, &mSerial);
@@ -157,6 +157,7 @@ void MainWindow::updateSensor(){
 	if (mSerial.isOpen()){
 		for (int i = 0; i < 5; i++){
 			isim[i]->updateGyroscopeData();
+			QThread::msleep(20);
 		}
 	}
 }
@@ -228,12 +229,9 @@ void MainWindow::assemblePathGenBtnClicked(){
 
 }
 void MainWindow::keyPressEvent(QKeyEvent* e){
-	/*
-	QMessageBox* box = new QMessageBox();
-	box->setWindowTitle(QString("Hello"));
-	box->setText(QString("You Pressed: ") + e->text());
-	box->show();
-	*/
+	if (e->text() == "g"){
+		sensorUpdateTimer->start(500);
+	}
 }
 void MainWindow::gyroReadBtnClicked(){
 	isimCurrentControl->updateYaw();
