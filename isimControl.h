@@ -1,7 +1,7 @@
 #pragma once
 
-#include "qbytearray.h"
-#include "qserialport.h"
+#include <QByteArray>
+#include <QtSerialPort/QSerialPort>
 
 class IsimControl {
 public :

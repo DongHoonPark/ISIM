@@ -57,7 +57,6 @@ class MainWindow : public QMainWindow {
 		QTimer* sensorUpdateTimer;
 		QString* cmdString;
 		QSerialPort mSerial;
-
 	private slots:
 		void imageProcess();
 };

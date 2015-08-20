@@ -12,7 +12,7 @@ const float DXL_ANGLE_SACLER = 3.4133333f;
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  mImageProcessTimer(this),
 										  mCurState(MANUAL),
-										  mSerial(),
+										  mSerial(this),
 										  mProcessor(){
 	// basic parameter settings
 	ui.setupUi(this);
